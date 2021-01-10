@@ -1,0 +1,202 @@
+[
+    {
+        "title": "Room (optional)",
+        "description": "Room names can only be alphanumeric, any other characters are replaced with underscores",
+        "answers": [
+            {
+                "label": "Enter a room name",
+                "type": "text",
+                "params": "&room"
+            }
+        ]
+    },
+    {
+        "title": "Invite (optional)",
+        "description": "You can set a push id to reuse this link. Everytime someone uses it you also use the same view link. Push ids must be unique!",
+        "answers": [
+            {
+                "label": "Custom Push ID",
+                "type": "text",
+                "params": "&push"
+            },
+            {
+                "label": "Password",
+                "type": "text",
+                "params": "&pw"
+            },
+            {
+                "label": "Language",
+                "type": "text",
+                "params": "&ln"
+            }
+        ]
+    },
+    {
+        "title": "Sharing types",
+        "description": "Limit the types of content your guests are allowed to share.",
+        "answers": [
+            {
+                "label": "Allow all",
+                "type": "radio",
+                "params": "",
+                "group": "allowed_devices",
+                "selected": true
+            },
+            {
+                "label": "Webcam",
+                "type": "radio",
+                "params": "&webcam",
+                "group": "allowed_devices"
+            },
+            {
+                "label": "Screen",
+                "type": "radio",
+                "params": "&screenshare",
+                "group": "allowed_devices"
+            },
+            {
+                "label": "File",
+                "type": "radio",
+                "params": "&fs",
+                "group": "allowed_devices"
+            }
+        ]
+    },
+    {
+        "title": "Guest features",
+        "description": "Guest related features like hand raising, display labels, disabling buttons.",
+        "answers": [    
+            {
+                "label": "Raise hand feature",
+                "type": "toggle",
+                "params": "&hands"
+            },
+            {
+                "label": "Hide settings button",
+                "type": "toggle",
+                "params": "&ns"
+            },
+            {
+                "label": "Auto-start",
+                "type": "toggle",
+                "params": "&as"
+            },
+            {
+                "label": "Guest only sees director feed",
+                "type": "toggle",
+                "params": "&broadcast"
+            },
+            {
+                "label": "Ask for display name",
+                "type": "toggle",
+                "params": "&l"
+            },
+            {
+                "label": "Show display names",
+                "type": "toggle",
+                "params": "&sl"
+            },
+            {
+                "label": "Set display name",
+                "type": "text",
+                "params": "&label"
+            }
+        ]
+    },
+    {
+        "title": "Video",
+        "description": "Ask for a resolution, fps, or a video device by name. These are not guaranteed, but subject to the system's abilities",
+        "answers": [
+            {
+                "label": "Default quality",
+                "type": "radio",
+                "params": "",
+                "group": "quality",
+                "selected": true
+            },
+            {
+                "label": "Up to 1080p60",
+                "type": "radio",
+                "params": "&quality=0",
+                "group": "quality"
+            },
+            {
+                "label": "Up to 720p30",
+                "type": "radio",
+                "params": "&quality=1",
+                "group": "quality"
+            },
+            {
+                "label": "Up to 360p30",
+                "type": "radio",
+                "params": "&quality=2",
+                "group": "quality"
+            },
+            {
+                "label": "Disable self-preview",
+                "type": "toggle",
+                "params": "&np"
+            },
+            {
+                "label": "Auto select default camera",
+                "type": "toggle",
+                "params": "&vd=1"
+            },
+            {
+                "label": "Disable camera",
+                "type": "toggle",
+                "params": "&vd=0"
+            },
+            {
+                "label": "Video device filter",
+                "type": "text",
+                "params": "&vd"
+            }
+        ]
+    },
+    {
+        "title": "Audio",
+        "description": "Get high quality stereo audio, or enable an audio pipeline compressor.",
+        "answers": [
+            {
+                "label": "Standard audio mode",
+                "type": "radio",
+                "params": "",
+                "group": "stereo",
+                "selected": "true"
+            },
+            {
+                "label": "Pro-audio",
+                "type": "radio",
+                "params": "&s",
+                "group": "stereo"
+            },
+            {
+                "label": "Force mono",
+                "type": "radio",
+                "params": "&mono",
+                "group": "stereo"
+            },
+            {
+                "label": "Auto select default microphone",
+                "type": "toggle",
+                "params": "&ad"
+            },
+            {
+                "label": "Audio compressor",
+                "type": "toggle",
+                "params": "&comp"
+            },
+            {
+                "label": "Mute microphone by default",
+                "type": "toggle",
+                "params": "&m"
+            },
+            {
+                "label": "Disable audio processing",
+                "type": "toggle",
+                "params": "&noap"
+            }
+        ]
+    }
+]

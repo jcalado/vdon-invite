@@ -1,0 +1,449 @@
+:root {
+    --background-color: #24232F;
+    --tile-backdrop: #626262;
+    --content-backdrop: #494949;
+    --content-label: #ffffff;
+    --content-padding: 2em;
+    --regular-margin: 10px;
+}
+
+body{
+    background-color: var(--tile-backdrop);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: sans-serif;
+    flex-direction: column;
+}
+
+h1 {
+    color: white;
+    display: block;
+    font-size: 150%;
+    text-transform: uppercase;
+    margin-top: 1em;
+    margin-bottom: 2em;
+}
+
+h1 small {
+    display: block;
+    font-size: 13px;
+    text-transform: none;
+    line-height: 20px;
+    margin-top: 10px;
+}
+h1 small a {
+    text-decoration: none;
+    border-bottom: 2px dotted #9c983a;
+    color: #ffffff;
+    padding: 2px;
+    text-transform: uppercase;
+}
+
+.click:hover {
+    cursor: copy;
+}
+
+input {
+    display: block;
+}
+
+input[type="radio"] {
+    display: inline;
+}
+
+.link {
+    background: var(--container-color);
+    padding: 10px;
+    text-align: center;
+    border: 4px solid var(--green-accent);
+}
+
+#outputUrl {
+    padding: 10px 20px;
+    background: var(--green-accent);
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+#panels {
+    background: var(--tile-backdrop);
+    padding: 0.5em;
+    width: 50%;
+}
+
+.panel {
+
+    background-color: var(--content-backdrop);
+    display: flex;
+    padding: 10px;
+    flex-direction: column;
+    color:white;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    position: relative;
+}
+
+.panel .title::before {
+    content: "▷";
+    font-size: 70%;
+    position: relative;
+    margin-right: 10px;
+    bottom: 2px;
+    font-weight: normal;
+}
+
+.panel .title:hover {
+cursor: pointer;
+}
+
+.panel.active .title::before {
+    content: "▽";
+}
+
+.panel .description::before {
+    content: "🛈";
+}
+
+.panel .answers {
+    overflow: hidden;
+    flex-direction: column;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-in-out;
+
+}
+
+.answersContainer {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    padding: 1em;
+}
+
+.panel.active .answers {
+    max-height: auto;
+}
+
+.panel .description {
+    position: absolute;
+    top: 8px;
+    right: 10px;
+    color: #7b7b7b;
+}
+
+.panel .description:hover {
+    position: absolute;
+    top: 8px;
+    right: 10px;
+    cursor: pointer;
+}
+
+
+#step #stepNumber {
+    position: absolute;
+    top: -35;
+    right: -20;
+    width: 40px;
+    height: 40px;
+    background: var(--green-accent);
+    border-radius: 50px;
+    color: white;
+    box-shadow: 0 0 8px black;
+    border: 1px solid #3b692b;
+}
+
+
+.panel .title{
+    font-weight: bold;
+    text-transform: uppercase;
+    text-align: left;
+}
+
+#step #stepAnswers {
+    display: flex;
+    margin-top: 5em;
+}
+
+#step #stepAnswers a {    
+    padding: 10px 15px;
+    border: 1px solid rgb(0, 116, 52);
+    border-radius: 4px;
+    margin: 10px;
+    background: var(--green-accent);
+    text-transform: uppercase;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+#step #stepAnswers input {
+    margin: 10px;
+    background: black;
+    border: none;
+    padding: 4px;
+    color: white;
+}
+
+#step #stepAnswers a:hover {
+    background: var(--olive-accent);
+}
+
+.link {
+    padding: 1em;
+    text-align: center;
+    background: #404040;
+    border-radius: 10px;
+}
+
+.link h1 {
+    text-transform: uppercase;
+    font-size: 1.5em;
+    text-align: left;
+    margin-left: 10px;
+}
+
+.link.final {
+    display: block;
+    position: absolute;
+    height: 50vh;
+    width: 60vw;
+    top: 30%;
+    transform: translateY(-30%);
+}
+
+.link a {
+    color: white;
+
+}
+
+#links {
+    width: 50%;
+    height: auto;
+    background-color: #626262;
+    transition: all 0.3s linear;
+    overflow: hidden;
+    padding: 0.5em;
+    margin-bottom: 4em;
+}
+
+#links > div {
+    padding: 1em;
+    border-radius: 10px;
+    background: #333333;
+    position: relative;
+}
+
+#links > div:last-child {
+margin-top: 1em;
+}
+
+#links h4 {
+    margin: 0;
+    margin-bottom: 0.5em;
+    color:#65c8f7;
+}
+
+
+#directorLink {
+    display: none;
+}
+
+#directorLink.show {
+    display: block;
+}
+
+#progress {
+    height: 20px;
+    background-color: var(--green-accent);
+    transition: all 0.2s ease-in-out;
+    color:white;
+    font-size: 16px;
+    padding: 2px;
+    line-height: 22px;
+    text-align: center;
+}
+
+
+.url {
+    display: block;
+    width: 100%;
+    border: none;
+    background: transparent;
+    color: white;
+    font-weight: bold;
+    margin: 0;
+    padding: 0;
+    cursor: copy;
+}
+
+a#url {
+    overflow: hidden;
+    overflow-wrap: anywhere;
+
+}
+
+input[type="text"] {
+    padding: 10px;
+    background: #333333;
+    border: 0;
+    color: white;
+}
+
+div#popup.active {
+}
+
+div#popup {
+    width: 20%;
+    color: white;
+    background: #1f1f1f;
+    text-align: left;
+    margin: 0;
+    position: absolute;
+    border-radius: 20px;
+    box-shadow: 10px 10px 50px #313131;
+    padding: 1em;
+    top: -1000px;
+    left: -1000px;
+}
+
+.textGroup {
+    grid-column: 1 / span 2;
+    display: grid;
+    align-items: baseline;
+    margin-bottom: 10px;
+    grid-template-columns: 1fr 1fr;
+}
+.textGroup span {
+    display: block;
+    grid-column: 1;
+    align-content: normal;
+}
+.textGroup input[type="text"] {
+    display: block;
+    grid-column: 2;
+}
+
+div#obfuscateSwitch {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    float: right;
+    color: white;
+}
+
+.switchGroup {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    height: 24px;
+  }
+
+  .switch + span {
+      margin-left: 10px;
+  }
+  
+  .switch input { 
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+
+  /* Rounded sliders */
+.slider.round {
+    border-radius: 16px;
+  }
+  
+  .slider.round:before {
+    border-radius: 50%;
+  }
+  
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 17px;
+    width: 17px;
+    left: 3px;
+    bottom: 4px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+  
+  input:checked + .slider {
+    background-color: #86B98F;
+  }
+  
+  input:focus + .slider {
+    box-shadow: 0 0 1px #86B98F;
+  }
+  
+  input:checked + .slider:before {
+    -webkit-transform: translateX(16px);
+    -ms-transform: translateX(16px);
+    transform: translateX(16px);
+  }
+  
+  /* Rounded sliders */
+  .slider.round {
+    border-radius: 34px;
+  }
+  
+  .slider.round:before {
+    border-radius: 50%;
+  }
+
+  .popup-message {
+    display: none;
+    text-align: center;
+    position: absolute;
+    z-index: 10;
+    padding: 5px 10px;
+    min-width: 180px;
+    background-color: #65c8f7;
+    color: #171717;
+    font-weight: bold;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px #65c8f7;
+    border: 2px solid #8cdbff;
+    }
+
+    .popup-message.active {
+        display: block;
+    }
+
+
+  @media only screen and (max-width: 420px) {
+    #panels {
+        width: 100%;
+    }
+    #links {
+        width: 100%;
+    }
+
+    .answersContainer {
+        display: flex;
+        flex-direction: column;
+    }
+
+    div#popup {
+        width: 50%;
+    }
+  }

@@ -102,10 +102,6 @@ cursor: pointer;
     content: "▽";
 }
 
-.panel .description::before {
-    content: "🛈";
-}
-
 .panel .answers {
     overflow: hidden;
     flex-direction: column;
@@ -274,6 +270,14 @@ margin-top: 1em;
     margin: 0;
     padding: 0;
     cursor: copy;
+    text-decoration: none;
+}
+
+.url::before {
+    content: "\f328";
+    font-family: 'Line Awesome Free';
+    font-size: 150%;
+    margin-right: 0.5em;
 }
 
 a#url {
@@ -430,12 +434,12 @@ div#obfuscateSwitch {
     }
 
 
-  @media only screen and (max-width: 420px) {
+  @media only screen and (max-width: 768px) {
     #panels {
-        width: 100%;
+        width: 90%;
     }
     #links {
-        width: 100%;
+        width: 90%;
     }
 
     .answersContainer {

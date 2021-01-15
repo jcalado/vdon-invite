@@ -4,52 +4,52 @@ function error(message) { console.error(message); }
 
 function copyFunction(copyText) {
 
-	try {
-		copyText.select();
-		copyText.setSelectionRange(0, 99999);
-		document.execCommand("copy");
-	} catch(e) {
-		var dummy = document.createElement('input');
-		document.body.appendChild(dummy);
-		dummy.value = copyText;
-		dummy.select();
-		document.execCommand('copy');
-		document.body.removeChild(dummy);
-		return false;
-	}
+    try {
+        copyText.select();
+        copyText.setSelectionRange(0, 99999);
+        document.execCommand("copy");
+    } catch (e) {
+        var dummy = document.createElement('input');
+        document.body.appendChild(dummy);
+        dummy.value = copyText;
+        dummy.select();
+        document.execCommand('copy');
+        document.body.removeChild(dummy);
+        return false;
+    }
 }
 
-function popupMessage(e, message="☑ Copied to Clipboard"){
-  
+function popupMessage(e, message = "Copied to Clipboard") {
+
     var posx = 0;
     var posy = 0;
 
     if (!e) var e = window.event;
-    
+
     if (e.pageX || e.pageY) {
-		posx = e.pageX;
-		posy = e.pageY;
+        posx = e.pageX;
+        posy = e.pageY;
     } else if (e.clientX || e.clientY) {
-		posx = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
-		posy = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
+        posx = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
+        posy = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
     }
 
-	posx += 10;
+    posx += 10;
 
 
-	var menu = document.querySelector("#messagePopup");
-	menu.innerHTML = "<center>"+message+"</center>";
-	var menuState = 0;
-	var menuWidth;
-	var menuHeight;
+    var menu = document.querySelector("#messagePopup");
+    menu.innerHTML = "<center>" + message + "</center>";
+    var menuState = 0;
+    var menuWidth;
+    var menuHeight;
 
-	var windowWidth;
-	var windowHeight;
+    var windowWidth;
+    var windowHeight;
 
-    if ( menuState !== 1 ) {
-		menuState = 1;
-		menu.classList.add( "active" );
-	}
+    if (menuState !== 1) {
+        menuState = 1;
+        menu.classList.add("active");
+    }
 
     menuWidth = menu.offsetWidth + 4;
     menuHeight = menu.offsetHeight + 4;
@@ -57,26 +57,26 @@ function popupMessage(e, message="☑ Copied to Clipboard"){
     windowWidth = window.innerWidth;
     windowHeight = window.innerHeight;
 
-    if ( (windowWidth - posx) < menuWidth ) {
-		menu.style.left = windowWidth - menuWidth + "px";
+    if ((windowWidth - posx) < menuWidth) {
+        menu.style.left = windowWidth - menuWidth + "px";
     } else {
-		menu.style.left = posx + "px";
+        menu.style.left = posx + "px";
     }
 
-    if ( (windowHeight - posy) < menuHeight ) {
-		menu.style.top = windowHeight - menuHeight + "px";
+    if ((windowHeight - posy) < menuHeight) {
+        menu.style.top = windowHeight - menuHeight + "px";
     } else {
-		menu.style.top = posy + "px";
+        menu.style.top = posy + "px";
     }
-	
-	function toggleMenuOff() {
-		if ( menuState !== 0 ) {
-		  menuState = 0;
-		  menu.classList.remove( "active" );
-		}
-	}
-	setTimeout(function(){toggleMenuOff();},1000);
-	event.preventDefault();
+
+    function toggleMenuOff() {
+        if (menuState !== 0) {
+            menuState = 0;
+            menu.classList.remove("active");
+        }
+    }
+    setTimeout(function () { toggleMenuOff(); }, 1000);
+    event.preventDefault();
 }
 
 function toggleObfuscate() {
@@ -121,6 +121,14 @@ function makeid(length) {
     return result;
 }
 
+function togglePopup() {
+    window.removeEventListener('click', togglePopup);
+    var popup = getById('popup');
+    popup.classList.toggle("active");
+    popup.style.left = "-1000px";
+    popup.style.top = "-1000px";
+}
+
 let jsonUrl = "data.json";
 
 fetch(jsonUrl)
@@ -156,12 +164,20 @@ function printSteps(steps) {
             } else {
                 content.style.maxHeight = content.scrollHeight + "px";
             }
+            setTimeout(function () {
+                panel.scrollIntoView({ block: "center", behavior: "smooth" });
+            }, 200)
+
         });
 
         var descriptionElement = document.createElement("span");
-        descriptionElement.className = "description";
+        descriptionElement.className = "description ";
         descriptionElement.title = item.description;
-        descriptionElement.addEventListener("click", function (evt) {
+
+        var iconElement = document.createElement("i");
+        iconElement.className = "las la-info-circle";
+
+        iconElement.addEventListener("click", function (evt) {
             if (evt.target !== this) return; // These are not the droids we are looking for
 
             var popupDescription = getById("popupDescription");
@@ -180,7 +196,13 @@ function printSteps(steps) {
             popup.style.top = y + "px";
 
             getById("popup").classList.toggle("active");
+            setTimeout(function () {
+                window.addEventListener('click', togglePopup);
+            }, 100);
+
         });
+
+        descriptionElement.appendChild(iconElement);
 
         var answersElement = document.createElement("div");
         answersElement.className = "answers";
@@ -311,7 +333,6 @@ function printSteps(steps) {
             getById("panels").appendChild(panel);
         });
 
-
     });
 }
 
@@ -335,8 +356,20 @@ function updateLink(input) {
             // Special case, room also impacts director URL
             if (param == 'room') {
                 var directorUrl = getById('directorUrl').dataset.raw;
-                directorUrl = directorUrl.replace("?" + param + "=" + paramValue, "");
-                getById('directorUrl').innerText = directorUrl;
+                directorUrl = directorUrl.replace("?room=" + paramValue, "");
+                getById('directorUrl').dataset.raw = directorUrl;
+            }
+
+            // Special case, password also impacts director URL
+            if (param == 'pw') {
+                var rawUrl = getById('directorUrl').dataset.raw;
+                var directorUrl = new URL(rawUrl);
+
+                if (directorUrl.searchParams.has(param)) {
+                    directorUrl.searchParams.delete("pw", input.value);
+                    getById('directorUrl').dataset.raw = directorUrl.toString();
+                }
+
             }
 
             // Special case - If no push id is provided, generate a random one
@@ -356,6 +389,7 @@ function updateLink(input) {
 
             // Parse url and get current param value
             var url = new URL(getById("url").dataset.raw);
+            var directorUrl = new URL(getById("directorUrl").dataset.raw);
             var currentParam = url.searchParams.get(param);
 
             // Sanitize the room name
@@ -375,21 +409,39 @@ function updateLink(input) {
 
             // Dealing with a room, update director URL as well
             if (param == 'room') {
-                var directorUrl = getById('directorUrl').dataset.raw;
-                getById('directorUrl').innerText = directorUrl + "?director=" + input.value;
-                getById('directorUrl').href = directorUrl + "?director=" + input.value;
+                log('this is a room, here have some params, director url!');
+                directorUrl.searchParams.set("director", input.value);
+                getById('directorUrl').dataset.raw = directorUrl.toString();
+
             }
 
-            // Make the text the same as the raw data
-            getById("url").innerText = getById("url").dataset.raw;
+            // Dealing with a password, update director URL as well
+            if (param == 'pw') {
+                if (directorUrl.searchParams.has(param)) {
+                    directorUrl.searchParams.set("pw", input.value);
+                    getById('directorUrl').dataset.raw = directorUrl.toString();
+                } else {
+                    // There was no parameter so create it
+                    directorUrl.searchParams.append("pw", input.value);
+                    getById('directorUrl').dataset.raw = directorUrl.toString();
+                }
+            }
+
         }
+
+        // Make the text the same as the raw data
+        getById("url").innerText = getById("url").dataset.raw;
+        getById("url").href = getById("url").dataset.raw;
+
+        getById("directorUrl").innerText = getById("directorUrl").dataset.raw;
+        getById("directorUrl").href = getById("directorUrl").dataset.raw;
 
 
     }
 
     // Checkbox checked, add the corresponding param
     if (input.checked) {
-        
+
         // This is a radio button, handle removing other possible param from the url
         if (input.getAttribute("type") == "radio") {
             var otherGroupInputs = input.parentElement.parentElement.parentElement.querySelectorAll(

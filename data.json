@@ -99,7 +99,7 @@
             {
                 "label": "Set display name",
                 "type": "text",
-                "params": "&label"
+                "params": "&l"
             }
         ]
     },

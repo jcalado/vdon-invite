@@ -295,6 +295,10 @@ function printSteps(steps) {
                     el.setAttribute("data-param", answer.params);
                     el.setAttribute("onchange", "updateLink(this)");
 
+                    if (answer.placeholder) {
+                        el.setAttribute("placeholder", answer.placeholder);
+                    }
+
                     var exampleElement = document.createElement("span");
 
                     switch (answer.params) {
@@ -325,6 +329,31 @@ function printSteps(steps) {
                     textGroupElement.appendChild(el);
                     answersContainerElement.appendChild(textGroupElement);
                     break;
+
+                case "select":
+                    var textGroupElement = document.createElement("div");
+                    textGroupElement.className = "textGroup";
+
+                    el = document.createElement("select");
+                    el.setAttribute("data-param", answer.params);
+                    el.setAttribute("onchange", "updateLink(this)");
+
+                    var optionValues = answer.optionValues.split(",");
+                    var optionLabels = answer.optionLabels.split(",");
+                    optionValues.forEach((option, index) => {
+                        var optionElement = document.createElement('option');
+                        optionElement.setAttribute('value', option);
+                        optionElement.innerText = optionLabels[index];
+                        el.appendChild(optionElement);
+                    })
+
+                    var exampleElement = document.createElement("span");
+                    exampleElement.innerText = answer.label;
+
+                    textGroupElement.appendChild(exampleElement);
+                    textGroupElement.appendChild(el);
+                    answersContainerElement.appendChild(textGroupElement);
+                    break;
                 default:
                     break;
             }
@@ -338,6 +367,34 @@ function printSteps(steps) {
 
 
 function updateLink(input) {
+
+    if (input.tagName == "SELECT") {
+        var param = input.dataset.param.replace("&", "")
+        var url = getById("url").dataset.raw;
+        var parsedUrl = new URL(getById("url").dataset.raw);
+
+        if (input.value.length == 0) {
+            
+
+            // Parse url and get current param value
+            
+            var paramValue = parsedUrl.searchParams.get(param);
+            url = url.replace("&" + param + "=" + paramValue, "");
+
+            getById("url").dataset.raw = url;
+        } else {
+            var currentParam = parsedUrl.searchParams.get(param);
+             // If the parameter is already present, change the value
+             if (parsedUrl.searchParams.has(param)) {
+                parsedUrl.searchParams.set(param, input.value);
+                getById("url").dataset.raw = parsedUrl.toString();
+            } else {
+                // There was no parameter with this name, so adding the string to the raw url
+                getById("url").dataset.raw +=
+                    input.dataset.param + "=" + input.value;
+            }
+        }
+    }
 
     if (input.getAttribute("type") == "text") {
         // Parameter value is  empty, remove it altogether.

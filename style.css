@@ -286,7 +286,7 @@ a#url {
 
 }
 
-input[type="text"] {
+input[type="text"], select {
     padding: 10px;
     background: #333333;
     border: 0;

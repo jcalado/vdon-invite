@@ -26,8 +26,10 @@
             },
             {
                 "label": "Language",
-                "type": "text",
-                "params": "&ln"
+                "type": "select",
+                "params": "&ln",
+                "optionValues": ",cs,de,es,fr,it,ja,nl,pig,ru,tr",
+                "optionLabels": "English,Czech,German,Spanish,French,Italian,Japanese,Dutch,Pig Latin,Russian,Turkish"
             }
         ]
     },

@@ -45,13 +45,13 @@
             {
                 "label": "Webcam",
                 "type": "radio",
-                "params": "&webcam",
+                "params": "&wc",
                 "group": "allowed_devices"
             },
             {
                 "label": "Screen",
                 "type": "radio",
-                "params": "&screenshare",
+                "params": "&ss",
                 "group": "allowed_devices"
             },
             {
@@ -117,19 +117,19 @@
             {
                 "label": "Up to 1080p60",
                 "type": "radio",
-                "params": "&quality=0",
+                "params": "&q=0",
                 "group": "quality"
             },
             {
                 "label": "Up to 720p30",
                 "type": "radio",
-                "params": "&quality=1",
+                "params": "&q=1",
                 "group": "quality"
             },
             {
                 "label": "Up to 360p30",
                 "type": "radio",
-                "params": "&quality=2",
+                "params": "&q=2",
                 "group": "quality"
             },
             {
@@ -148,7 +148,7 @@
                 "params": "&vd=0"
             },
             {
-                "label": "Video device filter",
+                "label": "Pre-select video device named",
                 "type": "text",
                 "params": "&vd"
             }
@@ -196,6 +196,11 @@
                 "label": "Disable audio processing",
                 "type": "toggle",
                 "params": "&noap"
+            },
+            {
+                "label": "Pre-select audio device named",
+                "type": "text",
+                "params": "&ad"
             }
         ]
     }

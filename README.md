@@ -2,12 +2,13 @@
 
 Invite link generator for the [obs.ninja](https://obs.ninja) website.
 Add panels or change the order by tweaking `data.json`.
+Steve keeps a copy under [invite.obs.ninja](https://invite.obs.ninja) (thanks Steve!) or you can directly access the code of this repo under [jcalado.github.io/obsn-invite](http://jcalado.github.io/obsn-invite).
 
 ## Data format
 
 The data json is an Array of entries following this format:
 
-<pre>
+````json
 {
     "title": "Sharing types",
     "description": "Limit the types of content your guests are allowed to share.",
@@ -21,7 +22,7 @@ The data json is an Array of entries following this format:
         }
     ]
 }
-</pre>
+````
 
 
 `title` is self explanatory.  
@@ -34,5 +35,5 @@ The data json is an Array of entries following this format:
 `selected` can be `true` or `false`. Use with radio buttons to set default value.
 
 ## Thanks to
-AES.js - URL obfuscation - [Site](code.google.com/p/crypto-js)  
-randomName.js - Random room name generation - [Site](code.google.com/p/crypto-jshttps://gist.github.com/tkon99/4c98af713acc73bed74c)
+AES.js - URL obfuscation - [Site](https://code.google.com/p/crypto-js)  
+randomName.js - Random room name generation - [Site](https://code.google.com/p/crypto-jshttps://gist.github.com/tkon99/4c98af713acc73bed74c)

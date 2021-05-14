@@ -265,6 +265,7 @@ function printSteps(steps) {
                     el.setAttribute("data-param", answer.params);
                     el.setAttribute("onchange", "updateLink(this)");
 
+
                     el.innerText = answer.label;
                     el.id = answer.label;
 
@@ -294,6 +295,11 @@ function printSteps(steps) {
                     el.setAttribute("type", "text");
                     el.setAttribute("data-param", answer.params);
                     el.setAttribute("onchange", "updateLink(this)");
+                    el.setAttribute("data-for", answer.for);
+                    
+                    if (answer.function) {
+                        el.setAttribute("data-function", answer.function);
+                    }
 
                     if (answer.placeholder) {
                         el.setAttribute("placeholder", answer.placeholder);
@@ -315,8 +321,14 @@ function printSteps(steps) {
                             var pushid = makeid(10);
                             el.value = pushid;
                             getById('url').href = getById('url').href + "?push=" + pushid;
+                            getById('viewUrl').href = getById('viewUrl').href + "?view=" + pushid;
+
                             getById('url').innerText = getById('url').href;
                             getById('url').dataset.raw = getById('url').dataset.raw + "?push=" + pushid;
+
+                            getById('viewUrl').innerText = getById('viewUrl').href;
+                            getById('viewUrl').dataset.raw = getById('viewUrl').dataset.raw + "?view=" + pushid;
+
                             exampleElement.innerText = answer.label;
                             break;
                         default:
@@ -337,6 +349,7 @@ function printSteps(steps) {
                     el = document.createElement("select");
                     el.setAttribute("data-param", answer.params);
                     el.setAttribute("onchange", "updateLink(this)");
+                    el.setAttribute("data-for", answer.for);
 
                     var optionValues = answer.optionValues.split(",");
                     var optionLabels = answer.optionLabels.split(",");
@@ -365,35 +378,35 @@ function printSteps(steps) {
     });
 }
 
+function encodeUri(uri){
+    return encodeURIComponent(uri).replace(/'/g,"%27").replace(/"/g,"%22")
+}
 
+function setStringParam(url, id, param, input, type){
+    if (input.dataset.for != undefined && input.dataset.for.includes(type)) {
+        url.searchParams.set(param, input.value);
+        getById(id).dataset.raw = url.toString();
+    }
+
+    if (input.dataset.for != undefined && param == 'view') {
+        url.searchParams.set(param, input.value);
+        getById(id).dataset.raw = url.toString();
+    }
+}
+
+/**
+ * Update the invite links when changing parameters
+ * @param  {HTMLElement} input This input triggered the change
+ */
 function updateLink(input) {
 
     if (input.tagName == "SELECT") {
         var param = input.dataset.param.replace("&", "")
-        var url = getById("url").dataset.raw;
-        var parsedUrl = new URL(getById("url").dataset.raw);
 
-        if (input.value.length == 0) {
-            
-
-            // Parse url and get current param value
-            
-            var paramValue = parsedUrl.searchParams.get(param);
-            url = url.replace("&" + param + "=" + paramValue, "");
-
-            getById("url").dataset.raw = url;
-        } else {
-            var currentParam = parsedUrl.searchParams.get(param);
-             // If the parameter is already present, change the value
-             if (parsedUrl.searchParams.has(param)) {
-                parsedUrl.searchParams.set(param, input.value);
-                getById("url").dataset.raw = parsedUrl.toString();
-            } else {
-                // There was no parameter with this name, so adding the string to the raw url
-                getById("url").dataset.raw +=
-                    input.dataset.param + "=" + input.value;
-            }
-        }
+        setStringParam(new URL(getById("url").dataset.raw), 'url', param, input, 'push')
+        setStringParam(new URL(getById("viewUrl").dataset.raw), 'viewUrl', param, input, 'view');
+        setStringParam(new URL(getById("directorUrl").dataset.raw), 'directorUrl', param, input, 'director');
+        
     }
 
     if (input.getAttribute("type") == "text") {
@@ -402,13 +415,19 @@ function updateLink(input) {
             var param = input.dataset.param.replace("&", "")
 
             var url = getById("url").dataset.raw;
+            var viewUrl = getById("viewUrl").dataset.raw;
 
             // Parse url and get current param value
             var parsedUrl = new URL(getById("url").dataset.raw);
             var paramValue = parsedUrl.searchParams.get(param);
             url = url.replace("&" + param + "=" + paramValue, "");
 
+            // Parse view url and get current param value
+            var viewUrlParamValue = new URL(getById("viewUrl").dataset.raw).searchParams.get(param);
+            viewUrl = viewUrl.replace("&" + param + "=" + viewUrlParamValue, "");
+
             getById("url").dataset.raw = url;
+            getById("viewUrl").dataset.raw = viewUrl;
 
             // Special case, room also impacts director URL
             if (param == 'room') {
@@ -432,63 +451,45 @@ function updateLink(input) {
             // Special case - If no push id is provided, generate a random one
             if (param == 'push') {
                 var randomId = makeid(10);
-
-                var url = getById('url').dataset.raw;
-                url = url.replace("?push=" + paramValue, "?push=" + randomId);
-
-                getById('url').innerText = url;
-                getById('url').dataset.raw = url;
-
+                input.value = randomId;
+                setStringParam(new URL(getById("url").dataset.raw), 'url', "push", input, 'push');
+                setStringParam(new URL(getById("viewUrl").dataset.raw), 'viewUrl', "view", input, 'view');
             }
         } else {
             // There's an actual input value, handle that
             var param = input.dataset.param.replace("&", "");
 
             // Parse url and get current param value
-            var url = new URL(getById("url").dataset.raw);
-            var directorUrl = new URL(getById("directorUrl").dataset.raw);
-            var currentParam = url.searchParams.get(param);
 
-            // Sanitize the room name
-            if (param == 'room') {
+            var directorUrl = new URL(getById("directorUrl").dataset.raw);
+
+
+            
+            if (param == 'room') { // Sanitize the room name
                 input.value = input.value.replace(/[\W]+/g, "_");
             }
 
-            // If the parameter is already present, change the value
-            if (url.searchParams.has(param)) {
-                url.searchParams.set(param, input.value);
-                getById("url").dataset.raw = url.toString();
-            } else {
-                // There was no parameter with this name, so adding the string to the raw url
-                getById("url").dataset.raw +=
-                    input.dataset.param + "=" + input.value;
+            if (param == 'push') { // Setting a push id should also set a &view
+                setStringParam(new URL(getById("viewUrl").dataset.raw), 'viewUrl', "view", input, 'view');
             }
 
-            // Dealing with a room, update director URL as well
-            if (param == 'room') {
-                log('this is a room, here have some params, director url!');
-                directorUrl.searchParams.set("director", input.value);
-                getById('directorUrl').dataset.raw = directorUrl.toString();
-
+            // Run helper functions
+            if (input.dataset.function) {
+                input.value = window[input.dataset.function](input.value);
             }
 
-            // Dealing with a password, update director URL as well
-            if (param == 'pw') {
-                if (directorUrl.searchParams.has(param)) {
-                    directorUrl.searchParams.set("pw", input.value);
-                    getById('directorUrl').dataset.raw = directorUrl.toString();
-                } else {
-                    // There was no parameter so create it
-                    directorUrl.searchParams.append("pw", input.value);
-                    getById('directorUrl').dataset.raw = directorUrl.toString();
-                }
-            }
+            setStringParam(new URL(getById("url").dataset.raw), 'url', param, input, 'push');
+            setStringParam(new URL(getById("viewUrl").dataset.raw), 'viewUrl', param, input, 'view');
+            setStringParam(new URL(getById("directorUrl").dataset.raw), 'directorUrl', param, input, 'director');
 
         }
 
         // Make the text the same as the raw data
         getById("url").innerText = getById("url").dataset.raw;
         getById("url").href = getById("url").dataset.raw;
+
+        getById("viewUrl").innerText = getById("viewUrl").dataset.raw;
+        getById("viewUrl").href = getById("viewUrl").dataset.raw;
 
         getById("directorUrl").innerText = getById("directorUrl").dataset.raw;
         getById("directorUrl").href = getById("directorUrl").dataset.raw;

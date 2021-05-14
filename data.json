@@ -6,7 +6,8 @@
             {
                 "label": "Enter a room name",
                 "type": "text",
-                "params": "&room"
+                "params": "&room",
+                "for": "view,push,director"
             }
         ]
     },
@@ -17,19 +18,22 @@
             {
                 "label": "Custom Push ID",
                 "type": "text",
-                "params": "&push"
+                "params": "&push",
+                "for": "push"
             },
             {
                 "label": "Password",
                 "type": "text",
-                "params": "&pw"
+                "params": "&pw",
+                "for": "view,push,director"
             },
             {
                 "label": "Language",
                 "type": "select",
                 "params": "&ln",
-                "optionValues": ",cs,de,es,fr,it,ja,nl,pig,ru,tr",
-                "optionLabels": "English,Czech,German,Spanish,French,Italian,Japanese,Dutch,Pig Latin,Russian,Turkish"
+                "optionValues": "en,cs,de,es,fr,it,ja,nl,pig,ru,tr",
+                "optionLabels": "English,Czech,German,Spanish,French,Italian,Japanese,Dutch,Pig Latin,Russian,Turkish",
+                "for": "view,push"
             }
         ]
     },
@@ -42,25 +46,29 @@
                 "type": "radio",
                 "params": "",
                 "group": "allowed_devices",
-                "selected": true
+                "selected": true,
+                "for": "push"
             },
             {
-                "label": "Webcam",
+                "label": "Camera",
                 "type": "radio",
                 "params": "&wc",
-                "group": "allowed_devices"
+                "group": "allowed_devices",
+                "for": "push"
             },
             {
                 "label": "Screen",
                 "type": "radio",
                 "params": "&ss",
-                "group": "allowed_devices"
+                "group": "allowed_devices",
+                "for": "push"
             },
             {
                 "label": "File",
                 "type": "radio",
                 "params": "&fs",
-                "group": "allowed_devices"
+                "group": "allowed_devices",
+                "for": "push"
             }
         ]
     },
@@ -71,37 +79,44 @@
             {
                 "label": "Raise hand feature",
                 "type": "toggle",
-                "params": "&hands"
+                "params": "&hands",
+                "for": "push"
             },
             {
                 "label": "Hide settings button",
                 "type": "toggle",
-                "params": "&ns"
+                "params": "&ns",
+                "for": "push"
             },
             {
                 "label": "Auto-start",
                 "type": "toggle",
-                "params": "&as"
+                "params": "&as",
+                "for": "push"
             },
             {
                 "label": "Guest only sees director feed",
                 "type": "toggle",
-                "params": "&broadcast"
+                "params": "&broadcast",
+                "for": "push"
             },
             {
                 "label": "Ask for display name",
                 "type": "toggle",
-                "params": "&l"
+                "params": "&l",
+                "for": "push"
             },
             {
                 "label": "Show display names",
                 "type": "toggle",
-                "params": "&sl"
+                "params": "&sl",
+                "for": "push,view"
             },
             {
                 "label": "Set display name",
                 "type": "text",
-                "params": "&l"
+                "params": "&l",
+                "for": "push"
             }
         ]
     },
@@ -114,45 +129,60 @@
                 "type": "radio",
                 "params": "",
                 "group": "quality",
-                "selected": true
+                "selected": true,
+                "for": "push"
             },
             {
                 "label": "Up to 1080p60",
                 "type": "radio",
                 "params": "&q=0",
-                "group": "quality"
+                "group": "quality",
+                "for": "push"
             },
             {
                 "label": "Up to 720p30",
                 "type": "radio",
                 "params": "&q=1",
-                "group": "quality"
+                "group": "quality",
+                "for": "push"
             },
             {
                 "label": "Up to 360p30",
                 "type": "radio",
                 "params": "&q=2",
-                "group": "quality"
+                "group": "quality",
+                "for": "push"
             },
             {
                 "label": "Disable self-preview",
                 "type": "toggle",
-                "params": "&np"
+                "params": "&np",
+                "for": "push"
             },
             {
                 "label": "Auto select default camera",
                 "type": "toggle",
-                "params": "&vd=1"
+                "params": "&vd=1",
+                "for": "push"
             },
             {
                 "label": "Disable camera",
                 "type": "toggle",
-                "params": "&vd=0"
+                "params": "&vd=0",
+                "for": "push"
             },
             {
                 "label": "Pre-select video device named",
                 "type": "text",
-                "params": "&vd"
+                "params": "&vd",
+                "for": "push"
+            },
+            {
+                "label": "Bitrate (Kbps)",
+                "type": "text",
+                "params": "&bitrate",
+                "for": "view"
+
             }
         ]
     },
@@ -165,44 +195,77 @@
                 "type": "radio",
                 "params": "",
                 "group": "stereo",
-                "selected": "true"
+                "selected": "true",
+                "for": "push"
             },
             {
                 "label": "Pro-audio",
                 "type": "radio",
                 "params": "&s",
-                "group": "stereo"
+                "group": "stereo",
+                "for": "push,view"
             },
             {
                 "label": "Force mono",
                 "type": "radio",
                 "params": "&mono",
-                "group": "stereo"
+                "group": "stereo",
+                "for": "push"
             },
             {
                 "label": "Auto select default microphone",
                 "type": "toggle",
-                "params": "&ad"
+                "params": "&ad",
+                "for": "push"
             },
             {
                 "label": "Audio compressor",
                 "type": "toggle",
-                "params": "&comp"
+                "params": "&comp",
+                "for": "push"
             },
             {
                 "label": "Mute microphone by default",
                 "type": "toggle",
-                "params": "&m"
+                "params": "&m",
+                "for": "push"
             },
             {
                 "label": "Disable audio processing",
                 "type": "toggle",
-                "params": "&noap"
+                "params": "&noap",
+                "for": "push"
+            },
+            {
+                "label": "Vertical Audio Meter style",
+                "type": "toggle",
+                "params": "&meterstyle=1",
+                "for": "push"
             },
             {
                 "label": "Pre-select audio device named",
                 "type": "text",
-                "params": "&ad"
+                "params": "&ad",
+                "for": "push"
+            }
+        ]
+    },
+    {
+        "title": "General options",
+        "description": "Limit the types of content your guests are allowed to share.",
+        "answers": [
+            {
+                "label": "CSS",
+                "type": "text",
+                "params": "&css",
+                "for": "push,view",
+                "function": "encodeUri"
+            },
+            {
+                "label": "Hide header",
+                "type": "toggle",
+                "params": "&noheader",
+                "for": "push"
             }
         ]
     }

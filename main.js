@@ -228,6 +228,7 @@ function printSteps(steps) {
                     el.setAttribute("name", answer.group);
                     el.setAttribute("data-param", answer.params);
                     el.setAttribute("onchange", "updateLink(this)");
+                    el.setAttribute("data-for", answer.for);
 
                     if (answer.selected) {
                         el.setAttribute("checked", true);
@@ -264,6 +265,11 @@ function printSteps(steps) {
                     el.setAttribute("type", "checkbox");
                     el.setAttribute("data-param", answer.params);
                     el.setAttribute("onchange", "updateLink(this)");
+                    el.setAttribute("data-for", answer.for);
+                    
+                    if (answer.function) {
+                        el.setAttribute("data-function", answer.function);
+                    }
 
 
                     el.innerText = answer.label;
@@ -296,6 +302,7 @@ function printSteps(steps) {
                     el.setAttribute("data-param", answer.params);
                     el.setAttribute("onchange", "updateLink(this)");
                     el.setAttribute("data-for", answer.for);
+                    el.setAttribute("onfocus", "this.oldValue = this.value");
                     
                     if (answer.function) {
                         el.setAttribute("data-function", answer.function);
@@ -314,12 +321,15 @@ function printSteps(steps) {
                             exampleElement.innerText = "Example room name: " + roomName;
                             exampleElement.addEventListener("click", function () {
                                 el.value = roomName;
+                                el.oldValue = '';
                                 el.onchange();
+
                             });
                             break;
                         case "&push":
                             var pushid = makeid(10);
                             el.value = pushid;
+                            el.blur();
                             getById('url').href = getById('url').href + "?push=" + pushid;
                             getById('viewUrl').href = getById('viewUrl').href + "?view=" + pushid;
 
@@ -348,8 +358,9 @@ function printSteps(steps) {
 
                     el = document.createElement("select");
                     el.setAttribute("data-param", answer.params);
-                    el.setAttribute("onchange", "updateLink(this)");
+                    el.setAttribute("onchange", "updateLink(this); this.blur()");
                     el.setAttribute("data-for", answer.for);
+                    el.setAttribute("onfocus", "this.oldValue = this.value");
 
                     var optionValues = answer.optionValues.split(",");
                     var optionLabels = answer.optionLabels.split(",");
@@ -382,16 +393,136 @@ function encodeUri(uri){
     return encodeURIComponent(uri).replace(/'/g,"%27").replace(/"/g,"%22")
 }
 
-function setStringParam(url, id, param, input, type){
-    if (input.dataset.for != undefined && input.dataset.for.includes(type)) {
-        url.searchParams.set(param, input.value);
-        getById(id).dataset.raw = url.toString();
+function checkDirector(){
+    console.log("Checking for a room....");
+    if (getById("url").innerText.includes('&room')) {
+        
+    } else {
+        console.log("There is no room so generating a random one");
+        document.querySelector("input[data-param='&room']").previousElementSibling.click();
+    }
+}
+
+function setAllLinkParams(param, input){
+    setStringParam(new URL(getById("url").dataset.raw), 'url', param, input, 'push')
+    setStringParam(new URL(getById("viewUrl").dataset.raw), 'viewUrl', param, input, 'view');
+    setStringParam(new URL(getById("directorUrl").dataset.raw), 'directorUrl', param, input, 'director');
+}
+
+function setStringParam(url, target, param, input, type){
+    console.log(`Setting string param: ${url} ${target} ${param} ${input} ${type}`)
+
+    if (input.dataset.for.includes(type))
+    {
+        // Handle checkboxes
+    if (input.getAttribute("type") == "checkbox"){
+        if (input.checked) {
+            getById(target).dataset.raw += param;
+        } else {
+            getById(target).dataset.raw = getById(target).dataset.raw.replace(param, '');
+        }
     }
 
-    if (input.dataset.for != undefined && param == 'view') {
-        url.searchParams.set(param, input.value);
-        getById(id).dataset.raw = url.toString();
+    if (input.tagName == 'SELECT'){
+        if (input.value != ""){
+            // There's a new value
+            if (input.oldValue != "" && getById(target).dataset.raw.includes(`&${param}`)) {
+                console.log("There was an old value so we're changing that");
+                console.log("We are replacing: " + input.oldValue);
+
+                getById(target).dataset.raw = getById(target).dataset.raw.replace(`&${param}=${input.oldValue}`, `&${param}=${input.value}`);
+                
+            } else {
+
+                getById(target).dataset.raw += `&${param}=${input.value}`;
+
+            }
+        } else {
+            // Theres an empty new value, remove the parameter from the url
+            if (param == 'room' && target == 'directorUrl'){ 
+                getById(target).dataset.raw = getById(target).dataset.raw.replace(`?dir=${input.oldValue}`, '');
+            } else {
+                getById(target).dataset.raw = getById(target).dataset.raw.replace(`&${param}=${input.oldValue}`, '');
+            }
+        }
     }
+
+    if (input.getAttribute("type") == "text") {
+        console.log("Changing a text input field");
+        console.log(`${param} - ${target}`)
+
+        if (input.value != ""){
+            // There's a new value
+            if (input.oldValue != "") {
+                console.log("There was an old value so we're changing that");
+                if (param == '&room' && target == 'directorUrl'){ 
+                    getById(target).dataset.raw = getById(target).dataset.raw.replace(`?dir=${input.oldValue}`, `?dir=${input.value}`);
+                } else {
+                    console.log(`Replacing ${input.oldValue} with ${input.value} on this url: ${target}`);
+                    if (param == '&push'){param = '?push'}
+                    if (param == '&view'){param = '?view'}
+                    getById(target).dataset.raw = getById(target).dataset.raw.replace(`${param}=${input.oldValue}`, `${param}=${input.value}`);
+                }
+            } else {
+                if (param == '&room' && target == 'directorUrl'){
+                    console.log("changing room on directorUrl")
+                    getById(target).dataset.raw += `?dir=${input.value}`;
+                } else {
+                    if (param == '&push'){param = '?push'}
+                    if (param == '&view'){param = '?view'}
+                    getById(target).dataset.raw += `${param}=${input.value}`;
+                }
+            }
+        } else {
+            // Theres an empty new value, remove the parameter from the url
+            if (param == '&room' && target == 'directorUrl'){ 
+                getById(target).dataset.raw = getById(target).dataset.raw.replace(`?dir=${input.oldValue}`, '');
+            } else {
+                getById(target).dataset.raw = getById(target).dataset.raw.replace(`${param}=${input.oldValue}`, '');
+            }
+        }
+
+    }
+
+    // Update the href and link text
+    getById(target).href = getById(target).dataset.raw;
+    getById(target).innerText = getById(target).dataset.raw;
+    }
+
+    
+}
+
+function setRadioParam(url, target, param, input, type){
+    console.log(`Setting radio param: ${url} ${target} ${param} ${input.dataset.param} ${type}`)
+
+    var otherGroupInputs = input.parentElement.parentElement.parentElement.querySelectorAll(
+        'input[name="' + input.name + '"]'
+    );
+
+    console.log("Disabling the other params of the group");
+    otherGroupInputs.forEach((input) => {
+        if ( input.dataset.param != '') {
+            console.log("Disabling " + input.dataset.param)
+            getById(target).dataset.raw = getById(target).dataset.raw.replace(input.dataset.param, "");
+            getById(target).innerText = getById(target).dataset.raw;
+            getById(target).href = getById(target).dataset.raw;
+        }
+    });
+
+
+    if (input.dataset.for != undefined && input.dataset.for.includes(type)) {
+        console.log("There's a param to set for this type")
+
+        // Add the param 
+        getById(target).dataset.raw += input.dataset.param;
+        var string = getById(target).dataset.raw;
+
+        getById(target).innerText = string;
+        getById(target).href = string;
+    }
+
+
+
 }
 
 /**
@@ -399,135 +530,79 @@ function setStringParam(url, id, param, input, type){
  * @param  {HTMLElement} input This input triggered the change
  */
 function updateLink(input) {
-
+    
     if (input.tagName == "SELECT") {
         var param = input.dataset.param.replace("&", "")
 
-        setStringParam(new URL(getById("url").dataset.raw), 'url', param, input, 'push')
-        setStringParam(new URL(getById("viewUrl").dataset.raw), 'viewUrl', param, input, 'view');
-        setStringParam(new URL(getById("directorUrl").dataset.raw), 'directorUrl', param, input, 'director');
+        setAllLinkParams(param, input);
         
     }
 
     if (input.getAttribute("type") == "text") {
+        var param = input.dataset.param;
         // Parameter value is  empty, remove it altogether.
         if (input.value.length == 0) {
-            var param = input.dataset.param.replace("&", "")
 
-            var url = getById("url").dataset.raw;
-            var viewUrl = getById("viewUrl").dataset.raw;
+            console.log("Clearing parameter since input is empty");
+            setAllLinkParams(param, input)
 
-            // Parse url and get current param value
-            var parsedUrl = new URL(getById("url").dataset.raw);
-            var paramValue = parsedUrl.searchParams.get(param);
-            url = url.replace("&" + param + "=" + paramValue, "");
-
-            // Parse view url and get current param value
-            var viewUrlParamValue = new URL(getById("viewUrl").dataset.raw).searchParams.get(param);
-            viewUrl = viewUrl.replace("&" + param + "=" + viewUrlParamValue, "");
-
-            getById("url").dataset.raw = url;
-            getById("viewUrl").dataset.raw = viewUrl;
-
-            // Special case, room also impacts director URL
-            if (param == 'room') {
-                var directorUrl = getById('directorUrl').dataset.raw;
-                directorUrl = directorUrl.replace("?room=" + paramValue, "");
-                getById('directorUrl').dataset.raw = directorUrl;
-            }
-
-            // Special case, password also impacts director URL
-            if (param == 'pw') {
-                var rawUrl = getById('directorUrl').dataset.raw;
-                var directorUrl = new URL(rawUrl);
-
-                if (directorUrl.searchParams.has(param)) {
-                    directorUrl.searchParams.delete("pw", input.value);
-                    getById('directorUrl').dataset.raw = directorUrl.toString();
-                }
-
-            }
 
             // Special case - If no push id is provided, generate a random one
-            if (param == 'push') {
+            if (param == '&push') {
                 var randomId = makeid(10);
                 input.value = randomId;
-                setStringParam(new URL(getById("url").dataset.raw), 'url', "push", input, 'push');
-                setStringParam(new URL(getById("viewUrl").dataset.raw), 'viewUrl', "view", input, 'view');
+                input.blur();
+
+                setStringParam(new URL(getById("url").dataset.raw), 'url', "&push", input, 'push');
+                setStringParam(new URL(getById("viewUrl").dataset.raw), 'viewUrl', "&view", input, 'view');
+                
             }
         } else {
-            // There's an actual input value, handle that
-            var param = input.dataset.param.replace("&", "");
-
-            // Parse url and get current param value
-
-            var directorUrl = new URL(getById("directorUrl").dataset.raw);
-
-
             
-            if (param == 'room') { // Sanitize the room name
+            if (param == '&room') { // Sanitize the room name
                 input.value = input.value.replace(/[\W]+/g, "_");
             }
 
-            if (param == 'push') { // Setting a push id should also set a &view
-                setStringParam(new URL(getById("viewUrl").dataset.raw), 'viewUrl', "view", input, 'view');
+            if (param == '&push') { // Setting a push id should also set a &view
+                console.log("Also update the view string on the viewUrl");
+                setStringParam(new URL(getById("viewUrl").dataset.raw), 'viewUrl', "?view", input, 'view');
             }
 
             // Run helper functions
             if (input.dataset.function) {
+                console.log("running helper function");
                 input.value = window[input.dataset.function](input.value);
             }
 
-            setStringParam(new URL(getById("url").dataset.raw), 'url', param, input, 'push');
-            setStringParam(new URL(getById("viewUrl").dataset.raw), 'viewUrl', param, input, 'view');
-            setStringParam(new URL(getById("directorUrl").dataset.raw), 'directorUrl', param, input, 'director');
+            setAllLinkParams(param, input);
 
         }
+    }
 
-        // Make the text the same as the raw data
-        getById("url").innerText = getById("url").dataset.raw;
-        getById("url").href = getById("url").dataset.raw;
+    if (input.getAttribute("type") == "checkbox"){
+        var param = input.dataset.param;
+        // Checkbox checked, add the corresponding param
 
-        getById("viewUrl").innerText = getById("viewUrl").dataset.raw;
-        getById("viewUrl").href = getById("viewUrl").dataset.raw;
+        // Run helper functions
+        if (input.dataset.function) {
+            console.log("running helper function");
+            window[input.dataset.function]();
+        }
 
-        getById("directorUrl").innerText = getById("directorUrl").dataset.raw;
-        getById("directorUrl").href = getById("directorUrl").dataset.raw;
-
+        setAllLinkParams(param, input);
 
     }
 
-    // Checkbox checked, add the corresponding param
-    if (input.checked) {
+    // This is a radio button, handle removing other possible param from the url
+    if (input.getAttribute("type") == "radio") {
+        var param = input.dataset.param.replace("&", "");
+        console.log("This is a radio group")
 
-        // This is a radio button, handle removing other possible param from the url
-        if (input.getAttribute("type") == "radio") {
-            var otherGroupInputs = input.parentElement.parentElement.parentElement.querySelectorAll(
-                'input[name="' + input.name + '"]'
-            );
-            otherGroupInputs.forEach((input) => {
-                var param = input.dataset.param;
-                getById("url").dataset.raw =
-                    getById("url").dataset.raw.replace(param, "");
-            });
-        }
-
-        // Add the param 
-        getById("url").dataset.raw += input.dataset.param;
-        var string = getById("url").dataset.raw;
-
-        getById("url").innerText = string;
-        getById("url").href = string;
-    } else {
-        // Input was unchecked
-        var string = getById("url").dataset.raw + "&";
-        string = string.replace(input.dataset.param + "&", "&");
-        string = string.substring(0, string.length - 1);
-        getById("url").dataset.raw = string;
-
-        getById("url").href = string;
-        getById("url").innerText = string;
+        setRadioParam(new URL(getById("url").dataset.raw), 'url', param, input, 'push')
+        setRadioParam(new URL(getById("viewUrl").dataset.raw), 'viewUrl', param, input, 'view');
+        setRadioParam(new URL(getById("directorUrl").dataset.raw), 'directorUrl', param, input, 'director');
     }
+
 
     // Toggle the director link panel
     if (getById("url").innerText.includes('&room')) {

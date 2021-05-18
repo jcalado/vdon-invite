@@ -9,6 +9,8 @@
   --neon-pink: #ea00d9;
   --neon-purple: #711c91;
   --neon-blue: #0abdc6;
+  --neon-green: #14FF00;
+  --neon-yellow: #FCF600;
 }
 
 body {
@@ -196,8 +198,20 @@ input[type="radio"] {
   background: var(--tile-backdrop);
   position: relative;
   margin: 1em 0;
+}
+
+#links > div:nth-child(1){
   border-bottom: 4px solid var(--neon-pink);
   box-shadow: 0 8px 8px -8px var(--neon-pink);
+}
+
+#links > div:nth-child(2){
+  border-bottom: 4px solid var(--neon-blue);
+  box-shadow: 0 8px 8px -8px var(--neon-blue);
+}
+#links > div:nth-child(3){
+  border-bottom: 4px solid var(--neon-purple);
+  box-shadow: 0 8px 8px -8px var(--neon-purple);
 }
 
 #links > div:last-child {
@@ -217,6 +231,10 @@ input[type="radio"] {
 
 #directorLink.show {
   display: block;
+}
+
+.hide {
+  display: none;
 }
 
 #progress {
@@ -269,12 +287,12 @@ div#popup.active {
 div#popup {
   width: 20%;
   color: white;
-  background: #1f1f1f;
+  background: var(--neon-blue);
   text-align: left;
   margin: 0;
   position: absolute;
   border-radius: calc(var(--border-radius) * 2);
-  box-shadow: 10px 10px 50px #313131;
+  box-shadow: 10px 10px 50px var(--neon-blue);
   padding: 1em;
   top: -1000px;
   left: -1000px;

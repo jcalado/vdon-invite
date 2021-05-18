@@ -19,7 +19,7 @@
                 "label": "Custom Push ID",
                 "type": "text",
                 "params": "&push",
-                "for": "push"
+                "for": "push,view"
             },
             {
                 "label": "Password",
@@ -31,8 +31,8 @@
                 "label": "Language",
                 "type": "select",
                 "params": "&ln",
-                "optionValues": "en,cs,de,es,fr,it,ja,nl,pig,ru,tr",
-                "optionLabels": "English,Czech,German,Spanish,French,Italian,Japanese,Dutch,Pig Latin,Russian,Turkish",
+                "optionValues": "en,cs,de,es,fr,it,ja,nl,pig,pt,ru,tr",
+                "optionLabels": "English,Czech,German,Spanish,French,Italian,Japanese,Dutch,Pig Latin,Portuguese,Russian,Turkish",
                 "for": "view,push"
             }
         ]
@@ -116,6 +116,14 @@
                 "label": "Set display name",
                 "type": "text",
                 "params": "&l",
+                "for": "push"
+            },
+            {
+                "label": "Transcribe",
+                "type": "select",
+                "params": "&trans",
+                "optionValues": ",cs-CZ,nl-NL,en-US,fr-FR,de-DE,it-IT,ja-JA,pt-PT,ru-RU,es-ES,tr-TR",
+                "optionLabels": ",Czech,Dutch,English,French,German,Italian,Japanese,Portuguese,Russian,Spanish,Turkish",
                 "for": "push"
             }
         ]
@@ -266,6 +274,42 @@
                 "type": "toggle",
                 "params": "&noheader",
                 "for": "push"
+            },
+            {
+                "label": "Show Closed Captions",
+                "type": "toggle",
+                "params": "&cc",
+                "for": "view"
+            }
+        ]
+    },
+    {
+        "title": "Director options",
+        "description": "This options apply to the director page",
+        "answers": [
+            {
+                "label": "Show Director",
+                "type": "toggle",
+                "params": "&showdirector",
+                "for": "director",
+                "function": "checkDirector",
+                "tooltip": "Let's director perform alongside guests."
+            },
+            {
+                "label": "Clean Director",
+                "type": "toggle",
+                "params": "&cleandirector",
+                "for": "director",
+                "function": "checkDirector",
+                "tooltip":"Hides the invite URL options in the Director's room."
+            },
+            {
+                "label": "Rooms",
+                "type": "text",
+                "params": "&rooms",
+                "for": "director",
+                "placeholder": "room1,room2,room3",
+                "tooltip": "Quick director access to a list of rooms for transfering guests."
             }
         ]
     }

@@ -1,8 +1,8 @@
 # obsninja-invite
 
-Invite link generator for the [obs.ninja](https://obs.ninja) website.
+Invite link generator for the [vdo.ninja](https://vdo.ninja) website.
 Add panels or change the order by tweaking `data.json`.
-Steve keeps a copy under [invite.obs.ninja](https://invite.obs.ninja) (thanks Steve!) or you can directly access the code of this repo under [jcalado.github.io/obsn-invite](http://jcalado.github.io/obsn-invite).
+Steve keeps a copy under [invite.obs.ninja](https://invite.obs.ninja) (thanks Steve!) or you can directly access the code of this repo under [jcalado.github.io/vdon-invite](http://jcalado.github.io/vdon-invite).
 
 ## Data format
 

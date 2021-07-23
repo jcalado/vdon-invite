@@ -337,7 +337,7 @@ function printSteps(steps) {
                             if (getById('viewUrl').href.indexOf("&room=") > -1){
                                 getById('viewUrl').href = getById('viewUrl').href + "&scene";
                                 getById('viewUrl').dataset.raw = getById('viewUrl').dataset.raw + "?view=" + pushid + "&scene";
-                                getById('viewUrl').innerText = getById('url').href;
+                                getById('viewUrl').innerText = getById('viewUrl').href;
                             } else {
                                 getById('viewUrl').innerText = getById('viewUrl').href;
                                 getById('viewUrl').dataset.raw = getById('viewUrl').dataset.raw + "?view=" + pushid;

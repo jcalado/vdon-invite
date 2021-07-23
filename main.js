@@ -331,14 +331,17 @@ function printSteps(steps) {
                             el.value = pushid;
                             el.blur();
                             getById('url').href = getById('url').href + "?push=" + pushid;
-                            getById('viewUrl').href = getById('viewUrl').href + "?view=" + pushid;
-
                             getById('url').innerText = getById('url').href;
                             getById('url').dataset.raw = getById('url').dataset.raw + "?push=" + pushid;
 
-                            getById('viewUrl').innerText = getById('viewUrl').href;
-                            getById('viewUrl').dataset.raw = getById('viewUrl').dataset.raw + "?view=" + pushid;
-
+                            if (getById('viewUrl').href.contains("&room="){
+                                getById('viewUrl').href = getById('viewUrl').href + "&scene";
+                                getById('viewUrl').dataset.raw = getById('viewUrl').dataset.raw + "?view=" + pushid + "&scene";
+                            } else {
+                                getById('viewUrl').innerText = getById('viewUrl').href;
+                                getById('viewUrl').dataset.raw = getById('viewUrl').dataset.raw + "?view=" + pushid;
+                            }
+                            
                             exampleElement.innerText = answer.label;
                             break;
                         default:

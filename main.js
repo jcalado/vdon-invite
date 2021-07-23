@@ -492,6 +492,15 @@ function setStringParam(url, target, param, input, type){
     getById(target).href = getById(target).dataset.raw;
     getById(target).innerText = getById(target).dataset.raw;
     }
+    
+    if ((type == "view") && (target == "viewUrl")){
+         if (getById('viewUrl').href.indexOf("&room=") > -1){
+             if (getById('viewUrl').href.indexOf("&scene") == -1){
+                getById('viewUrl').href = getById('viewUrl').href + "&scene";
+                getById('viewUrl').innerText = getById('viewUrl').href;
+             }
+        }
+    }
 
     
 }

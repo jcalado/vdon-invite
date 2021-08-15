@@ -92,7 +92,6 @@ function toggleObfuscate() {
         url.innerText = obfuscateURL(url);
     }
 }
-
 function obfuscateURL(element) {
     input = element.href;
 
@@ -103,12 +102,57 @@ function obfuscateURL(element) {
     } else if (input.startsWith("obs.ninja/")) {
         input = input.replace('obs.ninja/', '');
     }
+    
+    if (input.startsWith("https://vdo.ninja/")) {
+        input = input.replace('https://vdo.ninja/', 'vdo.ninja/');
+    } else if (input.startsWith("http://vdo.ninja/")) {
+        input = input.replace('http://vdo.ninja/', 'vdo.ninja/');
+    } 
 
     var key = "OBSNINJAFORLIFE";
     var encrypted = CryptoJS.AES.encrypt(input, key);
     var output = "https://invite.cam/" + encrypted.toString();
     return output;
 }
+function toggleBeta() {
+    var url = getById('url');
+
+    if (url.dataset.beta == "true") {
+        url.dataset.beta = "false";
+        url.href = url.dataset.raw;
+        url.innerText = url.dataset.raw;
+    } else {
+        url.dataset.beta = "true";
+        url.href = betaURL(url);
+        url.innerText = betaURL(url);
+    }
+    
+    if (url.dataset.obfuscated == "true") {
+        url.href = obfuscateURL(url);
+        url.innerText = obfuscateURL(url);
+    } 
+}
+function betaURL(element) {
+    input = element.href;
+
+    if (input.startsWith("https://obs.ninja/")) {
+        input = input.replace('https://obs.ninja/', 'beta/');
+    } else if (input.startsWith("http://obs.ninja/")) {
+        input = input.replace('http://obs.ninja/', 'beta/');
+    } else if (input.startsWith("obs.ninja/")) {
+        input = input.replace('obs.ninja/', 'beta/');
+    }
+    
+    if (input.startsWith("https://vdo.ninja/")) {
+        input = input.replace('https://vdo.ninja/', 'vdo.ninja/beta/');
+    } else if (input.startsWith("http://vdo.ninja/")) {
+        input = input.replace('http://vdo.ninja/', 'vdo.ninja/beta/');
+    } else if (input.startsWith("vdo.ninja/")) {
+        input = input.replace('vdo.ninja/', 'vdo.ninja/beta/');
+    }
+    return output;
+}
+
 
 function makeid(length) {
     var result = "";
@@ -626,6 +670,11 @@ function updateLink(input) {
 
     var url = getById("url");
 
+     if (url.dataset.beta == "true") {
+        url.href = betaURL(url);
+        url.innerText = betaURL(url);
+    }
+    
     if (url.dataset.obfuscated == "true") {
         url.href = obfuscateURL(url);
         url.innerText = obfuscateURL(url);

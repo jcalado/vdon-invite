@@ -24,14 +24,13 @@
 	<div id="links">
 		<div id="guestLink">
 			<h4>Guest invite Link</h4>
-			<div class="switchGroup" id="betaSwitch">
+			
+			<div class="switchGroup obfuscateSwitch">
 				<label class="switch">
 					<input type="checkbox" name="obfuscate" onchange="toggleBeta()"></input>
 					<span class="slider round"></span>
 				</label>
 				<span>Beta</span>
-			</div>
-			<div class="switchGroup" id="obfuscateSwitch">
 				<label class="switch">
 					<input type="checkbox" name="obfuscate" onchange="toggleObfuscate()"></input>
 					<span class="slider round"></span>
@@ -43,6 +42,18 @@
 		</div>
 		<div id="viewLink">
 			<h4>Viewer (OBS) Link</h4>
+			<div class="switchGroup obfuscateSwitch">
+				<label class="switch">
+					<input type="checkbox" name="obfuscate" onchange="toggleBeta('viewUrl')"></input>
+					<span class="slider round"></span>
+				</label>
+				<span>Beta</span>
+				<label class="switch">
+					<input type="checkbox" name="obfuscate" onchange="toggleObfuscate('viewUrl')"></input>
+					<span class="slider round"></span>
+				</label>
+				<span>Obfuscate</span>
+			</div>
 			<a id="viewUrl" title="Click to copy" class="url" data-raw="https://vdo.ninja/" href="https://vdo.ninja/"
 				onclick="popupMessage(event);copyFunction(this)" onmousedown="copyFunction(this)"></a>
 		</div>

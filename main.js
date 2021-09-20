@@ -185,6 +185,13 @@ function togglePopup() {
     popup.style.top = "-1000px";
 }
 
+function base64EncodeUrl(str) {
+    return btoa(str)
+      .replace(/\+/g, "-")
+      .replace(/\//g, "_")
+      .replace(/\=+$/, "");
+}
+
 let jsonUrl = "data.json";
 
 fetch(jsonUrl)
@@ -285,6 +292,7 @@ function printSteps(steps) {
                     el.setAttribute("data-param", answer.params);
                     el.setAttribute("onchange", "updateLink(this)");
                     el.setAttribute("data-for", answer.for);
+                    el.setAttribute("data-beta", answer.beta);
 
                     if (answer.selected) {
                         el.setAttribute("checked", true);
@@ -322,6 +330,7 @@ function printSteps(steps) {
                     el.setAttribute("data-param", answer.params);
                     el.setAttribute("onchange", "updateLink(this)");
                     el.setAttribute("data-for", answer.for);
+                    el.setAttribute("data-beta", answer.beta);
                     
                     if (answer.function) {
                         el.setAttribute("data-function", answer.function);
@@ -358,6 +367,7 @@ function printSteps(steps) {
                     el.setAttribute("data-param", answer.params);
                     el.setAttribute("onchange", "updateLink(this)");
                     el.setAttribute("data-for", answer.for);
+                    el.setAttribute("data-beta", answer.beta);
                     el.setAttribute("onfocus", "this.oldValue = this.value");
                     
                     if (answer.function) {
@@ -401,6 +411,15 @@ function printSteps(steps) {
                             
                             exampleElement.innerText = answer.label;
                             break;
+                        case "&b64css":
+                            exampleElement.className = "click";
+                            exampleElement.innerText = "Base64-encoded CSS (click here to encode)";
+                            exampleElement.addEventListener("click", function () {
+                                el.oldValue =  el.value;
+                                el.value = base64EncodeUrl(el.value);
+                                el.onchange();
+                            });
+                            break;
                         default:
                             exampleElement.innerText = answer.label;
                             break;
@@ -420,6 +439,7 @@ function printSteps(steps) {
                     el.setAttribute("data-param", answer.params);
                     el.setAttribute("onchange", "updateLink(this); this.blur()");
                     el.setAttribute("data-for", answer.for);
+                    el.setAttribute("data-beta", answer.beta);
                     el.setAttribute("onfocus", "this.oldValue = this.value");
 
                     var optionValues = answer.optionValues.split(",");
@@ -556,9 +576,7 @@ function setStringParam(url, target, param, input, type){
                 getById('viewUrl').innerText = getById('viewUrl').href;
              }
         }
-    }
-
-    
+    }    
 }
 
 function setRadioParam(url, target, param, input, type){
@@ -703,4 +721,17 @@ function updateLink(input) {
         url.href = obfuscateURL(url);
         url.innerText = url.href;
     }
+
+        if (input.dataset.beta === "true") {
+          var guestBeta = getById("guestBetaToggle");
+          var viewerBeta = getById("viewerBetaToggle");
+
+          if (!guestBeta.checked) {
+            guestBeta.click();
+          }
+          if (!viewerBeta.checked) {
+            viewerBeta.click();
+          }
+
+        }
 }

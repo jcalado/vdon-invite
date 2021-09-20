@@ -262,25 +262,33 @@
         "title": "General options",
         "description": "Limit the types of content your guests are allowed to share.",
         "answers": [
-            {
-                "label": "CSS",
-                "type": "text",
-                "params": "&css",
-                "for": "push,view",
-                "function": "encodeUri"
-            },
-            {
-                "label": "Hide header",
-                "type": "toggle",
-                "params": "&noheader",
-                "for": "push"
-            },
-            {
-                "label": "Show Closed Captions",
-                "type": "toggle",
-                "params": "&cc",
-                "for": "view"
-            }
+          {
+            "label": "CSS URL",
+            "type": "text",
+            "params": "&css",
+            "for": "push,view",
+            "function": "encodeUri"
+          },
+          {
+            "label": "Base64 encoded CSS (beta only)",
+            "type": "text",
+            "params": "&b64css",
+            "for": "push,view",
+            "placeholder": "* BETA feature - Enables beta links",
+            "beta": true
+          },
+          {
+            "label": "Hide header",
+            "type": "toggle",
+            "params": "&noheader",
+            "for": "push"
+          },
+          {
+            "label": "Show Closed Captions",
+            "type": "toggle",
+            "params": "&cc",
+            "for": "view"
+          }
         ]
     },
     {

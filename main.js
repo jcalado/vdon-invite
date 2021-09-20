@@ -79,20 +79,31 @@ function popupMessage(e, message = "Copied to Clipboard") {
     event.preventDefault();
 }
 
-function toggleObfuscate() {
-    var url = getById('url');
+function toggleObfuscate(type="url") {
+    var url = getById(type);
 
+	
     if (url.dataset.obfuscated == "true") {
         url.dataset.obfuscated = "false";
         url.href = url.dataset.raw;
-        url.innerText = url.dataset.raw;
+        url.innerText = url.href;
+		
+		if (url.dataset.beta == "true") {
+			url.href = betaURL(url);
+			url.innerText = url.href;
+		}
+		
     } else {
+		
+		if (url.dataset.beta == "true") {
+			url.href = betaURL(url);
+			url.innerText = url.href;
+		}
         url.dataset.obfuscated = "true";
         url.href = obfuscateURL(url);
-        url.innerText = obfuscateURL(url);
+        url.innerText = url.href;
     }
 }
-
 function obfuscateURL(element) {
     input = element.href;
 
@@ -103,12 +114,57 @@ function obfuscateURL(element) {
     } else if (input.startsWith("obs.ninja/")) {
         input = input.replace('obs.ninja/', '');
     }
+    
+    if (input.startsWith("https://vdo.ninja/")) {
+        input = input.replace('https://vdo.ninja/', 'vdo.ninja/');
+    } else if (input.startsWith("http://vdo.ninja/")) {
+        input = input.replace('http://vdo.ninja/', 'vdo.ninja/');
+    } 
 
     var key = "OBSNINJAFORLIFE";
     var encrypted = CryptoJS.AES.encrypt(input, key);
     var output = "https://invite.cam/" + encrypted.toString();
     return output;
 }
+function toggleBeta(type="url") {
+    var url = getById(type);
+
+    if (url.dataset.beta == "true") {
+        url.dataset.beta = "false";
+        url.href = url.dataset.raw;
+        url.innerText = url.href
+    } else {
+        url.dataset.beta = "true";
+        url.href = betaURL(url);
+        url.innerText = url.href;
+    }
+	
+    if (url.dataset.obfuscated == "true") {
+        url.href = obfuscateURL(url);
+        url.innerText = url.href;
+    }  
+}
+function betaURL(element) {
+    input = element.dataset.raw;;
+
+    if (input.startsWith("https://obs.ninja/")) {
+        input = input.replace('https://obs.ninja/', 'https://obs.ninja/beta/');
+    } else if (input.startsWith("http://obs.ninja/")) {
+        input = input.replace('http://obs.ninja/', 'https://obs.ninja/beta/');
+    } else if (input.startsWith("obs.ninja/")) {
+        input = input.replace('obs.ninja/', 'https://obs.ninja/beta/');
+    }
+    
+    if (input.startsWith("https://vdo.ninja/")) {
+        input = input.replace('https://vdo.ninja/', 'https://vdo.ninja/beta/');
+    } else if (input.startsWith("http://vdo.ninja/")) {
+        input = input.replace('http://vdo.ninja/', 'https://vdo.ninja/beta/');
+    } else if (input.startsWith("vdo.ninja/")) {
+        input = input.replace('vdo.ninja/', 'https://vdo.ninja/beta/');
+    }
+    return input;
+}
+
 
 function makeid(length) {
     var result = "";
@@ -331,14 +387,18 @@ function printSteps(steps) {
                             el.value = pushid;
                             el.blur();
                             getById('url').href = getById('url').href + "?push=" + pushid;
-                            getById('viewUrl').href = getById('viewUrl').href + "?view=" + pushid;
-
                             getById('url').innerText = getById('url').href;
                             getById('url').dataset.raw = getById('url').dataset.raw + "?push=" + pushid;
 
-                            getById('viewUrl').innerText = getById('viewUrl').href;
-                            getById('viewUrl').dataset.raw = getById('viewUrl').dataset.raw + "?view=" + pushid;
-
+                            if ((getById('viewUrl').href.indexOf("&room=") > -1) && (getById('viewUrl').href.indexOf("&scene") == -1)){
+                                getById('viewUrl').href = getById('viewUrl').href + "&scene";
+                                getById('viewUrl').dataset.raw = getById('viewUrl').dataset.raw + "?view=" + pushid + "&scene";
+                                getById('viewUrl').innerText = getById('viewUrl').href;
+                            } else {
+                                getById('viewUrl').innerText = getById('viewUrl').href;
+                                getById('viewUrl').dataset.raw = getById('viewUrl').dataset.raw + "?view=" + pushid;
+                            }
+                            
                             exampleElement.innerText = answer.label;
                             break;
                         default:
@@ -488,6 +548,15 @@ function setStringParam(url, target, param, input, type){
     getById(target).href = getById(target).dataset.raw;
     getById(target).innerText = getById(target).dataset.raw;
     }
+    
+    if ((type == "view") && (target == "viewUrl")){
+         if (getById('viewUrl').href.indexOf("&room=") > -1){
+             if (getById('viewUrl').href.indexOf("&scene") == -1){
+                getById('viewUrl').href = getById('viewUrl').href + "&scene";
+                getById('viewUrl').innerText = getById('viewUrl').href;
+             }
+        }
+    }
 
     
 }
@@ -613,8 +682,25 @@ function updateLink(input) {
 
     var url = getById("url");
 
+    if (url.dataset.beta == "true") {
+        url.href = betaURL(url);
+        url.innerText = url.href;
+    }
+    
     if (url.dataset.obfuscated == "true") {
         url.href = obfuscateURL(url);
-        url.innerText = obfuscateURL(url);
+        url.innerText = url.href;
+    }
+	
+	var url = getById("viewUrl");
+
+    if (url.dataset.beta == "true") {
+        url.href = betaURL(url);
+        url.innerText = url.href;
+    }
+    
+    if (url.dataset.obfuscated == "true") {
+        url.href = obfuscateURL(url);
+        url.innerText = url.href;
     }
 }

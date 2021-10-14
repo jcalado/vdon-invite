@@ -735,3 +735,21 @@ function updateLink(input) {
 
         }
 }
+
+
+function guestQRCode(id){
+    console.log(id)
+    const link = document.querySelector(id).href
+
+    img = QRCode.generatePNG(link, {
+      ecclevel: "M",
+      fillcolor: "#FFFFFF",
+      textcolor: "#000000",
+      margin: 2,
+      modulesize: 20,
+    });
+
+    const template = `<div id='guestQRCode' onclick='this.outerHTML=""'><img src='${img}'/><a href='${img}' download='Guest Invite QRCode.png'>Download</a></div>`;
+
+    document.body.insertAdjacentHTML('beforeend', template)
+}

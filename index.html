@@ -4,6 +4,7 @@
 	<meta charset="utf-8" />
 	<script src="thirdparty/randomName.js"></script>
 	<script src="thirdparty/aes.js"></script>
+	<script src="thirdparty/qrjs2.js"></script>
 	<script src="main.js?v=3"></script>
 	<link rel="stylesheet" href="style.css?v=2" />
 	<link rel="stylesheet"
@@ -23,7 +24,7 @@
 	</div>
 	<div id="links">
 		<div id="guestLink">
-			<h4>Guest invite Link</h4>
+			<h4>Guest invite Link <span onclick="guestQRCode('#url')">QR Code</span></h4>
 			
 			<div class="switchGroup obfuscateSwitch">
 				<label class="switch">
@@ -41,7 +42,7 @@
 				onclick="popupMessage(event);copyFunction(this)" onmousedown="copyFunction(this)"></a>
 		</div>
 		<div id="viewLink">
-			<h4>Viewer (OBS) Link</h4>
+			<h4>Viewer (OBS) Link <span onclick="guestQRCode('#viewUrl')">QR Code</span></h4>
 			<div class="switchGroup obfuscateSwitch">
 				<label class="switch">
 					<input id="viewerBetaToggle" type="checkbox" name="beta" onchange="toggleBeta('viewUrl')"></input>
